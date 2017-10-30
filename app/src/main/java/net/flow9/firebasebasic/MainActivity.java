@@ -93,17 +93,23 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void initListener(){
-        userRef.addValueEventListener(new ValueEventListener() {
 
+        // user 노드에 리스너 달기
+        userRef.addValueEventListener(new ValueEventListener() {
+            // user 노드의 값이 변경되면 발생
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 Log.d("FireBase","=========cnt="+dataSnapshot.getChildrenCount());
                 List<User> data = new ArrayList<>(); // 아답터에 입력할 데이터 정의
 
+                // 변경사항이 스냅샷 형태로 넘어오면
+                // 해당 스냅샷의 하위 노드를 배열로 꺼내서 사용한다.
                 for(DataSnapshot snapshot : dataSnapshot.getChildren()){
                     String id = snapshot.getKey();
                     Log.d("FireBase","user="+id);
 
+                    // 하위 노드 아래에 리스트 형태의 또 다른 노드가 있으면
+                    // 부가적인 처리가 필요하다
                     if(snapshot.hasChild("bbs")){
                         User user = new User();
                         Map map = (HashMap) snapshot.getValue();
@@ -114,22 +120,23 @@ public class MainActivity extends AppCompatActivity
                         user.email = email;
                         user.user_id = id;
 
+                        // 하위노드의 스냅샷 꺼내기
                         DataSnapshot bbss = snapshot.child("bbs");
                         user.bbs = new ArrayList();
+                        // 하위 노드에 리스트가 존재하면 해당 리스트를
+                        // 배열로 꺼내서 위의 방법처럼 사용한다
                         for(DataSnapshot item : bbss.getChildren()) {
                             Bbs bbs = item.getValue(Bbs.class);
                             Log.d("FireBase","Bbs in User===="+bbs.title);
                             user.bbs.add(bbs);
                         }
                         data.add(user);
-
+                    // 하위노드 아래에 키:값 세트만 존재하면 클래스로 바로 컨버팅 할 수 있다.
                     }else{
                         User user = snapshot.getValue(User.class);
                         user.user_id = id;
                         data.add(user);
                     }
-
-
                 }
                 // data 를 아답터에 반영하고 아답터를 notify 한다.
                 userAdapter.setDataAndRefresh(data);
