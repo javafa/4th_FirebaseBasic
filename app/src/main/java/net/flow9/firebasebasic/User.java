@@ -1,10 +1,9 @@
 package net.flow9.firebasebasic;
 
-import java.util.List;
+import com.google.firebase.database.Exclude;
+import com.google.firebase.database.IgnoreExtraProperties;
 
-/**
- * Created by pc on 10/30/2017.
- */
+import java.util.List;
 
 public class User {
 
@@ -12,6 +11,9 @@ public class User {
     public String username;
     public int age;
     public String email;
+
+    @Exclude // database field 에서 제외하고 싶을때 사용
+    public boolean check = false;
 
     // 내가 작성한 글 목록
     public List<Bbs> bbs;

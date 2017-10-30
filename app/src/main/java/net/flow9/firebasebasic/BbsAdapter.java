@@ -6,7 +6,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,15 +14,10 @@ import java.util.List;
  * Created by pc on 10/30/2017.
  */
 
-public class UserAdapter extends RecyclerView.Adapter<UserAdapter.Holder>{
-    List<User> data = new ArrayList<>();
-    Callback callback;
+public class BbsAdapter extends RecyclerView.Adapter<BbsAdapter.Holder>{
+    List<Bbs> data = new ArrayList<>();
 
-    public UserAdapter(Callback callback){
-        this.callback = callback;
-    }
-
-    public void setDataAndRefresh(List<User> data){
+    public void setDataAndRefresh(List<Bbs> data){
         this.data = data;
         Log.d("Adapter","data========="+data.size());
         notifyDataSetChanged();
@@ -38,22 +32,16 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.Holder>{
 
     @Override
     public void onBindViewHolder(Holder holder, int position) {
-        User user = data.get(position);
-        Log.d("Adapter","userid========="+user.user_id);
-        holder.textId.setText(user.user_id);
-        holder.textName.setText(user.username);
+        Bbs bbs = data.get(position);
+        Log.d("Adapter","bbs id========="+bbs.id);
+        holder.textId.setText(bbs.id);
+        holder.textName.setText(bbs.title);
     }
 
     @Override
     public int getItemCount() {
         return data.size();
     }
-
-    // 리사이클러 뷰 아답터 규현
-    // 1. 데이터 구조 = User.class
-    // 2. 아이템 레이아웃
-    // 3. Holder
-    // 4. 아답터 구현
 
     public class Holder extends RecyclerView.ViewHolder{
         TextView textId;
@@ -62,19 +50,6 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.Holder>{
             super(itemView);
             textId = itemView.findViewById(R.id.textId);
             textName = itemView.findViewById(R.id.textName);
-
-            itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    String user_id = textId.getText().toString();
-                    callback.setUserid(user_id);
-                    Toast.makeText(v.getContext(), "userid="+user_id,Toast.LENGTH_SHORT).show();
-                }
-            });
         }
-    }
-
-    public interface Callback{
-        public void setUserid(String userid);
     }
 }
